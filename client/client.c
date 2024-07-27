@@ -12,7 +12,6 @@
 #include "socket.h"
 #include "shell.h"
 
-void * clnt_handle(void * arg);
 
 int main(int argc, char * argv[]){
     if(argc != 3){
@@ -21,23 +20,28 @@ int main(int argc, char * argv[]){
     }
     struct sockaddr_in serv_adr;
     int sock = tcp_client_create(argv[2], argv[1], &serv_adr);
-    printf("%d", serv_adr.sin_port);
     if(connect(sock, (struct sockaddr*)&serv_adr, sizeof(serv_adr)) == -1){
         error_handling("connect() error!");
     }
     comm_st cst;
     while(1){
-        char * buf;
         size_t bufsize = 1024;
+        char * buf=(char*)malloc(bufsize);
         res_st rst;
         getline(&buf, &bufsize, stdin);
         if(strlen(buf) == 0){
             continue;
         }
         fflush(stdin);
+        buf[strlen(buf)-1] = '\0';
+        printf("%s%s%s", buf, buf, buf);
+        sleep(1);
         char * args = strtok(buf, " ");
+        args = strtok(NULL, " ");
         if(args == 0x0){
             if(strcmp(buf, "ls") == 0){
+                printf("ls!!\n");
+                fflush(stdout);
                 cst.c = LS;
                 cst.arg[0] = '\0';
                 write(sock, &cst, sizeof(cst));
@@ -57,6 +61,7 @@ int main(int argc, char * argv[]){
             }
             else{
                 printf("no command %s\n", buf);
+                printf("%d\n", strcmp(buf, "ls"));
             }
             free(buf);
             continue;
