@@ -74,6 +74,7 @@ int main(int argc, char * argv[]){
             get_file(".", &finfo, args);
             write(sock, &finfo, sizeof(finfo));
             write_from_file(sock, ".", finfo);
+            read_full(sock, &rst, sizeof(rst));
         }
         else if(strcmp(buf, "dl") == 0){
             cst.c = DL;
@@ -81,6 +82,7 @@ int main(int argc, char * argv[]){
             file finfo;
             read_full(sock, &finfo, sizeof(finfo));
             read_to_file(sock, ".", finfo);
+            read_full(sock, &rst, sizeof(rst));
         }
         else if(strcmp(buf, "exit") == 0){
             cst.c = EXIT;
@@ -90,6 +92,7 @@ int main(int argc, char * argv[]){
             cst.c = CD;
             strcpy(cst.arg, args);
             write(sock, &cst, sizeof(cst));
+            read_full(sock, &rst, sizeof(rst));
         }
         else{
             printf("no command %s with argument\n", buf);

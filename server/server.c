@@ -64,7 +64,7 @@ void * clnt_handle(void * arg){
                 break;
             case LS:
                 r_st.code = SUCCESS;
-                fcount = get_files(s_path, &files);
+                fcount = get_files(path, &files);
                 r_st.size = fcount * sizeof(file);
                 if(fcount < 0){
                     r_st.size = 0;
@@ -72,19 +72,23 @@ void * clnt_handle(void * arg){
                 }
                 write(clnt_sd, &r_st, sizeof(r_st));
                 write_v(clnt_sd, files, fcount, sizeof(file));
+                free(files);
                 break;
             case UP:
                 read_full(clnt_sd, &f_info, sizeof(file));
                 r_st.size = 0;
                 r_st.code = SUCCESS;
+                printf("UP %s(%lu)\n", f_info.name, f_info.size);
                 if(read_to_file(clnt_sd, path, f_info) == -1){
                     r_st.code = UNDEFINED_ERR;
                 }
                 write(clnt_sd, &r_st, sizeof(r_st));
                 break;
             case DL:
-                read_full(clnt_sd, &f_info, sizeof(file));
+                get_file(".", &f_info, clnt_comm.arg);
+                write(clnt_sd, &f_info, sizeof(file));
                 write_from_file(clnt_sd, path, f_info);
+                read_full(clnt_sd, &r_st, sizeof(r_st));
                 break;
             case EXIT:
                 exit = 1;

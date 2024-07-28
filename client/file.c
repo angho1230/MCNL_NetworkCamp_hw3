@@ -69,7 +69,7 @@ int read_to_file(int fd, const char * path, file finfo){
     int size = finfo.size;
     char * fname = (char *)malloc(sizeof(char) * (strlen(path)+strlen(finfo.name) + 2));
     sprintf(fname, "%s/%s", path, finfo.name);
-    FILE * fp = fopen(path, "wb");
+    FILE * fp = fopen(fname, "wb");
     if(fp == 0x0){
         printf("cannot open %s\n", path);
         return -1;
@@ -93,7 +93,7 @@ int read_to_file(int fd, const char * path, file finfo){
 int write_from_file(int fd, const char * path, file finfo){
     char * fname = (char *)malloc(sizeof(char) * (strlen(path)+strlen(finfo.name) + 2));
     sprintf(fname, "%s/%s", path, finfo.name);
-    FILE * fp = fopen(path, "rb");
+    FILE * fp = fopen(fname, "rb");
     if(fp == 0x0){
         printf("cannot open %s\n", path);
         free(fname);

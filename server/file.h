@@ -13,3 +13,4 @@ typedef struct file{
 int get_files(const char * path, file ** files);
 int read_to_file(int fd, const char * path, file finfo);
 int write_from_file(int fd, const char * path, file finfo);
+int get_file(const char * path, file * dstf, const char * fname);

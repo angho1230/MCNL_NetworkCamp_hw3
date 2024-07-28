@@ -17,7 +17,7 @@ int get_files(const char * path, file ** files){
     struct stat stst;
     int count = 0;
     int fsize = 16;
-
+    printf("path : %s\n", path);
     if ((d = opendir(path)) == 0x0){
         printf("Failed opening %s\n", path);
         return -1;
@@ -49,13 +49,29 @@ int get_files(const char * path, file ** files){
     return count;
 }
 
+int get_file(const char * path, file * dstf, const char * fname){
+    char * f_path = (char *)malloc(sizeof(char) * (strlen(path) + strlen(fname) +2));
+    sprintf(f_path, "%s/%s", path, fname);
+    struct stat stst;
+    if(stat(f_path, &stst) == -1){
+        printf("Failed to stat %s\n", f_path);
+        free(f_path);
+        return -1;
+    }
+    dstf->auth = stst.st_mode;
+    dstf->size = stst.st_size;
+    strcpy(dstf->name, fname);
+    free(f_path);
+    return 0;
+}
+
 int read_to_file(int fd, const char * path, file finfo){
     int size = finfo.size;
     char * fname = (char *)malloc(sizeof(char) * (strlen(path)+strlen(finfo.name) + 2));
     sprintf(fname, "%s/%s", path, finfo.name);
-    FILE * fp = fopen(path, "wb");
+    FILE * fp = fopen(fname, "wb");
     if(fp == 0x0){
-        printf("cannot open %s\n", path);
+        printf("cannot open %s\n", fname);
         return -1;
     }
     int read_size = 0, read_len;
@@ -77,9 +93,9 @@ int read_to_file(int fd, const char * path, file finfo){
 int write_from_file(int fd, const char * path, file finfo){
     char * fname = (char *)malloc(sizeof(char) * (strlen(path)+strlen(finfo.name) + 2));
     sprintf(fname, "%s/%s", path, finfo.name);
-    FILE * fp = fopen(path, "rb");
+    FILE * fp = fopen(fname, "rb");
     if(fp == 0x0){
-        printf("cannot open %s\n", path);
+        printf("cannot open %s\n", fname);
         return -1;
     }
     int read_len;

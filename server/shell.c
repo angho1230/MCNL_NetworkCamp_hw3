@@ -10,6 +10,7 @@
 
 
 char * get_new_path(const char * path, const char * arg){
+    printf("%s received\n", arg);
     if(strcmp(arg, ".") == 0){
         char * new_path = strdup(path);
         return new_path;
@@ -19,7 +20,7 @@ char * get_new_path(const char * path, const char * arg){
         char *curr, *prev;
         curr = new_path;
         prev = new_path;
-        while(strchr(curr, '/') == 0x0){
+        while(strchr(curr, '/') != 0x0){
             prev = curr;
             curr++;
         }
@@ -38,6 +39,7 @@ char * get_new_path(const char * path, const char * arg){
 
 int change_dir(char ** path, const char * arg){
     char * new_path = get_new_path(*path, arg);
+    printf("%s\n", new_path);
     if(access(new_path, X_OK) == -1){
         int err = errno;
         free(new_path);
@@ -58,5 +60,6 @@ int change_dir(char ** path, const char * arg){
     }
     free(*path);
     *path = new_path;
+    printf("%s\n", *path);
     return 0;
 }
