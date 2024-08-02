@@ -22,5 +22,5 @@ The project contains several components:
 3. use `cd` `<path>` to change your directory
 4. use `ls` to list the files in your current directory
 5. use `up` or `dl` to upload or download the files
->up <file name>
->dl <file name>
+>up <file_name>
+>dl <file_name>
